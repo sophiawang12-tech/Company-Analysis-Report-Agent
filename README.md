@@ -1,6 +1,6 @@
 # Company Analysis Report Agent
 
-A Claude-based skill that runs strategic intelligence analysis on any target company. It uses a multi-layer web search strategy to gather public information, then synthesizes findings into structured Markdown and JSON reports based on configurable dimensions.
+A Claude-based skill that runs strategic intelligence analysis on any target company. It uses a multi-layer web search strategy to gather public information, synthesizes findings into structured Markdown/JSON reports, and optionally **pushes the results directly to a Notion database or page**.
 
 ## Purpose
 
@@ -8,6 +8,7 @@ A Claude-based skill that runs strategic intelligence analysis on any target com
 - **Configurable dimensions**: Define your own analysis focus (e.g., Market Positioning, Supply Chain, Digital Transformation, Financial Health)
 - **Source traceability**: All findings include references with URLs
 - **Batch mode**: Process multiple companies in one run
+- **Notion Integration**: Automatically append generated reports to your Notion workspace for easy sharing and archiving
 
 ## Requirements
 
@@ -81,18 +82,40 @@ python scripts/agent.py \
   --delay 15
 ```
 
-### Optional: Push to Notion
+## Notion Integration
+
+This agent can automatically append the generated analysis reports to a specific Notion page. This is useful for building a centralized competitive intelligence database.
+
+### Setup
+
+1. **Get your Notion API Token**:
+   - Go to [My Integrations](https://www.notion.so/my-integrations).
+   - Create a new "Internal Integration".
+   - Copy the "Internal Integration Secret" (starts with `secret_...`).
+
+2. **Connect the Integration to your Page**:
+   - Open the Notion page where you want reports to appear.
+   - Click the `...` menu in the top right corner.
+   - Click **Connections** (or "Add connections").
+   - Search for and select your new integration.
+   - *Note: If you skip this step, the agent will fail with a 404 or 403 error.*
+
+### Usage
+
+Set your token as an environment variable and pass the page URL (or ID) to the script:
 
 ```bash
-# Set Notion token
-export NOTION_TOKEN=secret_xxx
+# 1. Set the token
+export NOTION_TOKEN=secret_your_token_here...
 
-# Append report to a Notion page
+# 2. Run with --notion-page
 python scripts/agent.py \
-  --company "Deutsche Bank" \
+  --company "Even Realities" \
   --config references/strategy_dimensions.md \
-  --notion-page "https://www.notion.so/YourPageId"
+  --notion-page "https://www.notion.so/your-workspace/Competitor-Analysis-1234567890abcdef"
 ```
+
+The report will be appended to the bottom of the page, formatted with proper headings, bullet points, and links.
 
 ## Output
 

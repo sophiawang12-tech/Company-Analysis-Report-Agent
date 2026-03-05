@@ -1,0 +1,5 @@
+# One company per line. Lines starting with # are skipped.
+# Example:
+# Deutsche Bank
+# HSBC
+# JPMorgan Chase
